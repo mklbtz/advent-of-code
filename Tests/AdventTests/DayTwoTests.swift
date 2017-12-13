@@ -28,19 +28,19 @@ class DayTwoTests: XCTestCase {
   ]
 
   func testDayTwoA() {
-    XCTAssertEqual(18, dayTwoA(exampleTable))
+    XCTAssertEqual(dayTwoA(exampleTable), 18)
   }
 
   func testDayTwoB() {
-    XCTAssertEqual(9, dayTwoB(exampleTable))
+    XCTAssertEqual(dayTwoB(exampleTable), 9)
   }
 
   func testPuzzleInputA() {
-    XCTAssertEqual(53978, dayTwoA(myInputTable))
+    XCTAssertEqual(dayTwoA(myInputTable), 53978)
   }
 
   func testPuzzleInputB() {
-    XCTAssertEqual(314, dayTwoB(myInputTable))
+    XCTAssertEqual(dayTwoB(myInputTable), 314)
   }
 
   func __testPerformanceExample() {
