@@ -3,23 +3,46 @@ public typealias Row = [Int?]
 public typealias MinMax = (min: Int, max: Int)
 
 public func dayTwoA(_ table: Table) -> Int {
-  return checksum(table: table)
+  return checksum(table: table) { row in
+    let result = row.flatMap { $0 }.minMax() ?? (0, 0)
+    return result.max - result.min
+  }
 }
 
-func checksum(table: Table) -> Int {
-  return table.map(checksum).reduce(0, +)
+public func dayTwoB(_ table: Table) -> Int {
+  return checksum(table: table) { row in
+    row.flatMap { $0 }.firstEvenDivision() ?? 0
+  }
 }
 
-func checksum(row: Row) -> Int {
-  let actuals = row.flatMap { $0 }
-  guard let first = actuals.first else { return 0 }
-  let result: MinMax = actuals.reduce((first, first), minmax)
-  return result.max - result.min
+func checksum(table: Table, method: (Row) -> Int) -> Int {
+  return table.map(method).reduce(0, +)
 }
 
-func minmax(_ current: MinMax, _ number: Int) -> MinMax {
-  return (
-    min: number < current.min ? number : current.min,
-    max: number > current.max ? number : current.max
-  )
+extension Collection where Element: Comparable {
+  func minMax() -> (min: Element, max: Element)? {
+    guard let first = self.first else { return nil }
+    return reduce((min: first, max: first)) { r, c in
+      (
+        min: c < r.min ? c : r.min,
+        max: c > r.max ? c : r.max
+      )
+    }
+  }
+}
+
+extension Collection where Element: BinaryInteger {
+  func firstEvenDivision() -> Element? {
+    for i in indices {
+      let a = self[i]
+      for b in self[index(after: i)...] {
+        if a % b == 0 {
+          return a / b
+        } else if b % a == 0 {
+          return b / a
+        }
+      }
+    }
+    return nil
+  }
 }
