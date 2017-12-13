@@ -1,10 +1,6 @@
 import XCTest
 @testable import Advent
 
-func expect(_ test: @autoclosure () -> Bool) {
-    XCTAssert(test())
-}
-
 class DayOneTests: XCTestCase {
     static var allTests = [
         ("testDayOneA", testDayOneA),
