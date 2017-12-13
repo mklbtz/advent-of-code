@@ -1,5 +1,5 @@
 import XCTest
-@testable import advent
+@testable import Advent
 
 func expect(_ test: @autoclosure () -> Bool) {
     XCTAssert(test())
