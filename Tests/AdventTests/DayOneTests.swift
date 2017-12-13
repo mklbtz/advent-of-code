@@ -11,6 +11,7 @@ class DayOneTests: XCTestCase {
     ]
 
     func testDayOneA() {
+        XCTAssertEqual(0, dayOneA("1"))
         XCTAssertEqual(3, dayOneA("1122"))
         XCTAssertEqual(4, dayOneA("1111"))
         XCTAssertEqual(0, dayOneA("1234"))
