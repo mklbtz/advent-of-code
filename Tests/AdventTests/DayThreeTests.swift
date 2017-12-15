@@ -15,7 +15,7 @@ class DayThreeTests: XCTestCase {
     XCTAssertEqual(spiral[6], Index(x: -1, y: -1))
     XCTAssertEqual(spiral[7], Index(x: 0, y: -1))
     XCTAssertEqual(spiral[8], Index(x: 1, y: -1))
-    XCTAssertEqual(spiral[9], Spiral.Index(x: 2, y: -1))
+    XCTAssertEqual(spiral[9], Index(x: 2, y: -1))
   }
 
   func testPuzzleInput() {
@@ -23,10 +23,4 @@ class DayThreeTests: XCTestCase {
     XCTAssertGreaterThan(output, 0)
     XCTAssertEqual(output, 438)
   }
-
-  func __testPerformanceExample() {
-      self.measure {
-      }
-  }
-
 }
