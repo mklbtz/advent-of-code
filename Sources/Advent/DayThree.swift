@@ -1,8 +1,10 @@
-func dayThreeA(_ iterations: Int) -> Int {
+func dayThreeA(_ offsetPlusOne: Int) -> Int {
   // Example spiral starts counting at one, but mine starts at zero.
-  let index = Spiral()[iterations - 1]
+  let index = Spiral.Index(offset: offsetPlusOne - 1)
   return abs(index.x) + abs(index.y) // get "Manhattan Distance"
 }
+
+
 
 struct Spiral {
   struct Index {
@@ -27,11 +29,9 @@ struct Spiral {
   }
 }
 
-extension Spiral {
-  subscript(number: Int) -> Index {
-    return (0..<number).reduce(Index.origin) { i, _ in index(after: i)}
-  }
 
+
+extension Spiral {
   var indices: AnySequence<Index> {
     return AnySequence(sequence(first: Spiral.Index.origin, next: index(after:)))
   }
@@ -45,7 +45,13 @@ extension Spiral {
   }
 }
 
+
+
 extension Spiral.Index {
+  init(offset: Int) {
+    self = (0..<offset).reduce(.origin) { i, _ in i.movingForward() }
+  }
+
   func movingForward() -> Spiral.Index {
     return moving(forward)
   }
@@ -70,7 +76,6 @@ extension Spiral.Index {
   var sector: Spiral.Sector {
     return .init(x: x, y: y)
   }
-
 
   var forward: Spiral.Direction {
     switch sector {
@@ -114,11 +119,15 @@ extension Spiral.Index {
   }
 }
 
+
+
 extension Spiral.Index: Equatable {
   static func ==(lhs: Spiral.Index, rhs: Spiral.Index) -> Bool {
     return lhs.x == rhs.x && lhs.y == rhs.y
   }
 }
+
+
 
 extension Spiral.Sector {
   init(x: Int, y: Int) {
