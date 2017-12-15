@@ -58,36 +58,46 @@ extension Spiral.Index {
   }
 
   var forward: Spiral.Direction {
-    guard self != .origin else { return .right }
-
-    if x <= y && -x < y {
+    if x < y && -x < y { // north wedge
       return .left
-    } else if x <= -y && x < y {
+    } else if x < -y && x < y { // west wedge
       return .down
-    } else if x >= y && x < -y {
+    } else if x > y && x < -y { // south wedge
       return .right
-    } else if -x < y && x > y {
+    } else if -x < y && x > y { // east wedge
       return .up
-    } else if -x == y {
-      return .right // moves into next layer of spiral
+    } else if -x == y && x >= 0 { // quad 4 diagonal and origin
+      return .right // move into next layer of spiral
+    } else if -x == y && x < 0 { // quad 2 diagonal
+      return .down
+    } else if x == y && x > 0 { // quad 1 diagonal
+      return .left
+    } else if x == y && x < 0 { // quad 3 diagonal
+      return .right
     } else {
       fatalError("This should be exhaustive!")
     }
   }
 
   var backward: Spiral.Direction {
-    guard self != .origin else { fatalError("Nowhere else to go!") }
-
-    if x <= y && -x < y {
-      return .up
-    } else if x <= -y && x < y {
-      return .left
-    } else if x >= y && x < -y {
-      return .down
-    } else if -x < y && x > y {
+    if self == .origin {
+      fatalError("No index before origin")
+    } else if x < y && -x < y { // north wedge
       return .right
-    } else if -x == y {
-      return .left // moves into previous layer of spiral
+    } else if x < -y && x < y { // west wedge
+      return .up
+    } else if x > y && x <= -y { // south wedge & quad 4 diagonal
+      return .left
+    } else if -x < y && x > y { // east wedge
+      return .down
+    } else if -x-1 == y && x > 0 { // just right of quad 4 diagonal
+      return .left // move into previous layer of spiral
+    } else if -x == y && x < 0 { // quad 2 diagonal
+      return .right
+    } else if x == y && x > 0 { // quad 1 diagonal
+      return .down
+    } else if x == y && x < 0 { // quad 3 diagonal
+      return .up
     } else {
       fatalError("This should be exhaustive!")
     }
