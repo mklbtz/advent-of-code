@@ -79,8 +79,10 @@ struct Spiral {
         return .left
       } else if x >= y && x < -y {
         return .down
-      } else if -x <= y && x > y {
+      } else if -x < y && x > y {
         return .right
+      } else if -x == y {
+        return .left // moves into previous layer of spiral
       } else {
         fatalError("This should be exhaustive!")
       }
