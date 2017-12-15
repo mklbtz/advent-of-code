@@ -21,10 +21,6 @@ struct Spiral {
     return i.movingBackward()
   }
 
-  enum Diagonal {
-    case first, second, third, fourth
-  }
-
   enum Direction {
     case up, down, left, right
   }
@@ -53,24 +49,6 @@ struct Spiral {
         return Index(x: x - 1, y: y)
       case .right:
         return Index(x: x + 1, y: y)
-      }
-    }
-
-    var diagonal: Diagonal? {
-      guard x != 0, y != 0, abs(x) == abs(y) else { return nil }
-      
-      if y > 0 {
-        if x > 0 {
-          return .first
-        } else {
-          return .second
-        }
-      } else {
-        if x > 0 {
-          return .fourth
-        } else {
-          return .third
-        }
       }
     }
 
