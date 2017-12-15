@@ -5,6 +5,19 @@ func dayThreeA(_ iterations: Int) -> Int {
 }
 
 struct Spiral {
+  enum Direction {
+    case up, down, left, right
+  }
+
+  struct Index {
+    var x: Int
+    var y: Int
+
+    static var origin: Index = Index(x: 0, y: 0)
+  }
+}
+
+extension Spiral {
   subscript(number: Int) -> Index {
     return (0..<number).reduce(Index.origin) { i, _ in index(after: i)}
   }
@@ -20,72 +33,63 @@ struct Spiral {
   func index(before i: Index) -> Index {
     return i.movingBackward()
   }
+}
 
-  enum Direction {
-    case up, down, left, right
+extension Spiral.Index {
+  func movingForward() -> Spiral.Index {
+    return moving(forward)
   }
 
-  struct Index {
-    var x: Int
-    var y: Int
+  func movingBackward() -> Spiral.Index {
+    return moving(backward)
+  }
 
-    static var origin: Spiral.Index = Spiral.Index(x: 0, y: 0)
-
-    func movingForward() -> Index {
-      return moving(forward)
+  private func moving(_ direction: Spiral.Direction) -> Spiral.Index {
+    switch direction {
+    case .up:
+      return Spiral.Index(x: x, y: y + 1)
+    case .down:
+      return Spiral.Index(x: x, y: y - 1)
+    case .left:
+      return Spiral.Index(x: x - 1, y: y)
+    case .right:
+      return Spiral.Index(x: x + 1, y: y)
     }
+  }
 
-    func movingBackward() -> Index {
-      return moving(backward)
+  var forward: Spiral.Direction {
+    guard self != .origin else { return .right }
+
+    if x <= y && -x < y {
+      return .left
+    } else if x <= -y && x < y {
+      return .down
+    } else if x >= y && x < -y {
+      return .right
+    } else if -x < y && x > y {
+      return .up
+    } else if -x == y {
+      return .right // moves into next layer of spiral
+    } else {
+      fatalError("This should be exhaustive!")
     }
+  }
 
-    private func moving(_ direction: Direction) -> Index {
-      switch direction {
-      case .up:
-        return Index(x: x, y: y + 1)
-      case .down:
-        return Index(x: x, y: y - 1)
-      case .left:
-        return Index(x: x - 1, y: y)
-      case .right:
-        return Index(x: x + 1, y: y)
-      }
-    }
+  var backward: Spiral.Direction {
+    guard self != .origin else { fatalError("Nowhere else to go!") }
 
-    var forward: Direction {
-      guard self != .origin else { return .right }
-
-      if x <= y && -x < y {
-        return .left
-      } else if x <= -y && x < y {
-        return .down
-      } else if x >= y && x < -y {
-        return .right
-      } else if -x < y && x > y {
-        return .up
-      } else if -x == y {
-        return .right // moves into next layer of spiral
-      } else {
-        fatalError("This should be exhaustive!")
-      }
-    }
-
-    var backward: Direction {
-      guard self != .origin else { fatalError("Nowhere else to go!") }
-
-      if x <= y && -x < y {
-        return .up
-      } else if x <= -y && x < y {
-        return .left
-      } else if x >= y && x < -y {
-        return .down
-      } else if -x < y && x > y {
-        return .right
-      } else if -x == y {
-        return .left // moves into previous layer of spiral
-      } else {
-        fatalError("This should be exhaustive!")
-      }
+    if x <= y && -x < y {
+      return .up
+    } else if x <= -y && x < y {
+      return .left
+    } else if x >= y && x < -y {
+      return .down
+    } else if -x < y && x > y {
+      return .right
+    } else if -x == y {
+      return .left // moves into previous layer of spiral
+    } else {
+      fatalError("This should be exhaustive!")
     }
   }
 }
