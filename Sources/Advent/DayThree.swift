@@ -12,20 +12,20 @@ struct Spiral {
     var y: Int
 
     static var origin: Index = Index(x: 0, y: 0)
-  }
 
-  enum Direction {
-    case north, south, west, east
-  }
+    enum Direction {
+      case north, south, west, east
+    }
 
-  enum Diagonal {
-    case northEast, northWest, southEast, southWest
-  }
+    enum Diagonal {
+      case northEast, northWest, southEast, southWest
+    }
 
-  enum Sector {
-    case origin
-    case wedge(Direction)
-    case diagonal(Diagonal)
+    enum Sector {
+      case origin
+      case wedge(Direction)
+      case diagonal(Diagonal)
+    }
   }
 }
 
@@ -60,7 +60,7 @@ extension Spiral.Index {
     return moving(backward)
   }
 
-  private func moving(_ direction: Spiral.Direction) -> Spiral.Index {
+  private func moving(_ direction: Direction) -> Spiral.Index {
     switch direction {
     case .north:
       return Spiral.Index(x: x, y: y + 1)
@@ -73,11 +73,11 @@ extension Spiral.Index {
     }
   }
 
-  var sector: Spiral.Sector {
+  var sector: Sector {
     return .init(x: x, y: y)
   }
 
-  var forward: Spiral.Direction {
+  var forward: Direction {
     switch sector {
     case .origin,
          .wedge(.south),
@@ -93,7 +93,7 @@ extension Spiral.Index {
     }
   }
 
-  var backward: Spiral.Direction {
+  var backward: Direction {
     switch sector {
     case .origin:
       fatalError("No index before origin")
@@ -103,7 +103,7 @@ extension Spiral.Index {
       return .north
     case .wedge(.south):
       return .west
-    case .wedge(.east) where y == (-x - 1):
+    case .wedge(.east) where x - 1 == -y:
       return .west // move into previous layer of spiral
     case .wedge(.east):
       return .south
@@ -129,7 +129,7 @@ extension Spiral.Index: Equatable {
 
 
 
-extension Spiral.Sector {
+extension Spiral.Index.Sector {
   init(x: Int, y: Int) {
     if x == 0 , y == 0 {
       self = .origin
@@ -151,6 +151,27 @@ extension Spiral.Sector {
       self = .diagonal(.southEast)
     } else {
       fatalError("This should be exhaustive!")
+    }
+  }
+}
+
+
+
+extension Spiral.Index.Diagonal: Equatable {}
+
+extension Spiral.Index.Direction: Equatable {}
+
+extension Spiral.Index.Sector: Equatable {
+  static func ==(lhs: Spiral.Index.Sector, rhs: Spiral.Index.Sector) -> Bool {
+    switch (lhs, rhs) {
+    case (.origin, .origin):
+      return true
+    case (.diagonal(let ld), .diagonal(let rd)) where ld == rd:
+      return true
+    case (.wedge(let lw), .wedge(let rw)) where lw == rw:
+      return true
+    case (.origin, _), (.diagonal, _), (.wedge, _):
+      return false
     }
   }
 }
